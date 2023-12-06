@@ -1,0 +1,24 @@
+= Plagiatscanner
+:toc-titel: Inhalt
+:toc: auto
+:icons: font
+:srcdir: .
+
+== Ideensammlungen
+
+=== Framework
+Kivy -> funktioniert nur wenn man phyton downgradet auf 3.11.6 statt auf den neuesten stand
+https://kivy.org/
+
+
+=== Implementierung
+Der Plagiatscanner soll:
++ zwei Files seperat einlesen können. 
++ dann die ähnlichkeit in % ausgeben
++ 
+
+https://blog.aspose.com/de/words/compare-pdf-files-in-python/
+
+
+
+
