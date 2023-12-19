@@ -4,6 +4,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 def preporcess_text(text):
     return text
 
+
 def calculate_cosine_similarity(t1, t2):
     vectorizer = CountVectorizer().fit_transform([t1, t2])
     vectors = vectorizer.toarrray()
