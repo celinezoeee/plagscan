@@ -30,6 +30,9 @@ https://www.geeksforgeeks.org/kivy-tutorial/
 
 + dann die ähnlichkeit in % ausgeben
 
++popup fenster -> https://kivy.org/doc/stable/api-kivy.uix.popup.html
+
+
 +der vergleicht nur DOC, DOCX und PDF. Mit der Bibliothek kann man Dokumente vergleichen und die Änderungen sogar auf Zeichenebene verfolgen.
 https://blog.aspose.com/de/words/compare-pdf-files-in-python/
 
