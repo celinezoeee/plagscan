@@ -10,14 +10,36 @@
 Kivy -> funktioniert nur wenn man phyton downgradet auf 3.11.6 statt auf den neuesten stand
 https://kivy.org/
 
+QT -> https://doc.qt.io/qtforpython-6/quickstart.html#quick-start
+
 
 === Implementierung
 Der Plagiatscanner soll:
-+ zwei Files seperat einlesen können. 
-+ dann die ähnlichkeit in % ausgeben
-+ 
++ zwei Files seperat einlesen können.
+https://www.geeksforgeeks.org/python-file-chooser-in-kivy/
 
+
++für andere funktionen hier die tutorials:
+https://www.geeksforgeeks.org/kivy-tutorial/
+
+    -> + einen ladebalken?
+        https://kivy.org/doc/stable/api-kivy.uix.progressbar.html
+        https://www.geeksforgeeks.org/python-progress-bar-widget-in-kivy/
+
+
+
++ dann die ähnlichkeit in % ausgeben
+
++der vergleicht nur DOC, DOCX und PDF. Mit der Bibliothek kann man Dokumente vergleichen und die Änderungen sogar auf Zeichenebene verfolgen.
 https://blog.aspose.com/de/words/compare-pdf-files-in-python/
+
++coding:
+    - https://www.youtube.com/watch?v=tBqYSzy80xY
+    - https://numpy.org/
+            -- https://www.youtube.com/watch?v=nAcsuWBIwMo
+    - https://www.youtube.com/watch?v=DIxxz_DvqLA
+    - https://scikit-learn.org/stable/ 
+
 
 
 

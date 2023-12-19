@@ -1,0 +1,34 @@
+<Filechooser>:
+     
+    label: label
+ 
+    # Providing the orientation
+    orientation: 'vertical'
+     
+    BoxLayout:
+ 
+        # Creating list view one side
+        FileChooserListView:
+            canvas.before:
+                Color:
+                    rgb: 0, 0, 0 #Schwarzer hintergrund
+            on_selection: root.select(*args)
+ 
+        # Creating Icon view other side
+        FileChooserListView:
+            canvas.before:
+                Color:
+                    rgb: 0, 0, 0 
+            on_selection: root.select(*args)
+ 
+    # Adding label
+    Label:
+        id: label
+        size_hint_y: .1
+        canvas.before:
+            Color:
+                rgb: 0, 0, 0
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
