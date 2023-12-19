@@ -11,6 +11,7 @@ from kivy.lang import Builder
 
 Builder.load_file('kivyy.kv')
 
+
 #bild links oben 
 Config.set('kivy', 'window_icon', 'image/bild.png')
  
