@@ -33,7 +33,7 @@ class WelcomeView(GridLayout):
         self.pos_hint = {'center_x': 0.5, 'center_y': 0.5}
 
         self.add_widget(Image(source='image/bild.png', size=(50, 50)))  # hier das bild dann einfügen
-        self.greeting = Label(text='Welcome!', font_size=18, color='#9010ad')
+        self.greeting = Label(text='Welcome! von sabrina', font_size=18, color='#9010ad')
         self.add_widget(self.greeting)
 
         self.button = Button(text='Click to continue!')
