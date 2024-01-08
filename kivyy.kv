@@ -8,43 +8,44 @@
             canvas.before:
                 Color:
                     rgb: 0, 0, 0  # Schwarzer Hintergrund
-            on_selection: root.select(filechooser_1, args[0], args[1])
+            on_selection: root.select_1(args[0], args[1])
 
         FileChooserListView:
             id: filechooser_2
             canvas.before:
                 Color:
                     rgb: 0, 0, 0  # Schwarzer Hintergrund
-            on_selection: root.select(filechooser_2, args[0], args[1])
+            on_selection: root.select_2(args[0], args[1])
 
     GridLayout:
         cols: 2
         ScrollView:
-            Label:
-                id: label_container_1
-                size_hint_y: None
-                height: '30dp'
-                text: 'Selected File 1 Content:'
-                canvas.before:
-                    Color:
-                        rgb: 0, 0, 0  # Schwarzer Hintergrund
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
-                text_size: self.width, None
-                height: self.texture_size[1]
+            id: scroll_view
+            TextInput:
+                id: label_1
+                text: 'Select a file to start the scan...'
+                size_hint: 1, None
+                foreground_color: (1, 0, 1, 1)
+                background_color: [0,0,0,1]
+                auto_indent: True
+                readonly: True
+                height: max(self.minimum_height, scroll_view.height)
+
 
         ScrollView:
-            Label:
-                id: label_container_2
-                size_hint_y: None
-                height: '30dp'
-                text: 'Selected File 2 Content:'
-                canvas.before:
-                    Color:
-                        rgb: 0, 0, 0  # Schwarzer Hintergrund
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
-                text_size: self.width, None
-                height: self.texture_size[1]
+            id: scroll_view
+            TextInput:
+                id: label_2
+                text: 'Select a file to start the scan...'
+                size_hint: 1, None
+                foreground_color: (1, 0, 1, 1)
+                background_color: [0,0,0,1]
+                auto_indent: True
+                readonly: True
+                height: max(self.minimum_height, scroll_view.height)
+                
+    MDRaisedButton:
+        text: "Compare Files"
+        md_bg_color: [1,0,1,1]
+        pos_hint: {"center_x": .5, "center_y": .5}
+        on_press: root.press_compare()

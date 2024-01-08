@@ -116,7 +116,6 @@ class WelcomeView(GridLayout):
 
 
 """
-#öffnen nur ein neues fenster wo es den inhalt zwar anzeigt aber nur immer einen .. :(
 class FileContentView(BoxLayout):
     def __init__(self, filechooser, file_path, **kwargs):
         super().__init__(**kwargs)
@@ -160,25 +159,38 @@ class MainView(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.label_1 = Label()
-        self.label_2 = Label()
-
-        self.ids.label_container_1.add_widget(self.label_1)
-        self.ids.label_container_2.add_widget(self.label_2)
-
-    def select(self, file_chooser, instance, value):
+    def select_1(self, instance, value):
         if value:
             selected_file = value[0]
             try:
                 with open(selected_file, 'r') as file:
                     file_content = file.read()
-                    self.label_1.text = f"Inhalt der ausgewählten Datei 1:\n{file_content}"
+                    self.ids.label_1.text = f"Inhalt der ausgewählten Datei 1:\n{file_content}"
                     
             except Exception as e:
                 print(f"Fehler beim Lesen der Datei: {e}")
         
         else:
             print("Keine Datei ausgewählt.")
+
+    def select_2(self, instance, value):
+        if value:
+            selected_file = value[0]
+            try:
+                with open(selected_file, 'r') as file:
+                    file_content = file.read()
+                    self.ids.label_2.text = f"Inhalt der ausgewählten Datei 2:\n{file_content}"
+                    
+            except Exception as e:
+                print(f"Fehler beim Lesen der Datei: {e}")
+        
+        else:
+            print("Keine Datei ausgewählt.")
+    def press_compare(self):
+        if self.ids.label_1.text and self.ids.label_2.text:
+            print("comparing now !!!")
+
+
 
 """
 ###############
