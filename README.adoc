@@ -28,7 +28,10 @@ https://www.geeksforgeeks.org/kivy-tutorial/
 
 
 
+
 + dann die ähnlichkeit in % ausgeben
+
++wenn ich einen file anklicke -> auch das ich es öffnen kann?
 
 +popup fenster -> https://kivy.org/doc/stable/api-kivy.uix.popup.html
 

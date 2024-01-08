@@ -1,5 +1,5 @@
-from kivy.app import App
 from kivy.config import Config
+from kivymd.app import MDApp
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivy.uix.button import Button
@@ -14,7 +14,8 @@ from kivy.core.text import Label as CoreLabel
 from kivy.graphics import Color, Ellipse, Rectangle
 from kivy.uix.filechooser import FileChooserListView
 from kivy.uix.popup import Popup
-
+from kivy.graphics import Line
+from kivymd.uix.progressbar import MDProgressBar
 
 Builder.load_file('kivyy.kv')
 
@@ -23,20 +24,20 @@ Config.set('kivy', 'window_icon', 'image/bild.png')
 
 
 # ladebalken -> todo: andere farbe?
-class MyProgressBar(ProgressBar):
+class MyProgressBar(MDProgressBar):
     def __init__(self, welcome_view, **kwargs):
         super().__init__(**kwargs)
         self.welcome_view = welcome_view
-        #self.bar_color = (0.5, 0, 0.5) # hier die farbe ändern
+        self.color = (0.5, 0, 0.5) # hier die farbe ändern
 
     def update_progress(self, dt):
         self.value += 1 #wie schnell soll es laden?
 
         if self.value >= 100:
-            self.switch_to_filechooser()
+            self.switch_to_mainview()
 
-    def switch_to_filechooser(self):
-        self.welcome_view.switch_to_filechooser()
+    def switch_to_mainview(self):
+        self.welcome_view.switch_to_mainview()
 
 
 #### -> um später einen kreis als ladebalken zu haben ? 
@@ -107,32 +108,129 @@ class WelcomeView(GridLayout):
         Clock.schedule_interval(self.progress_bar.update_progress, 1 / 25)
         #Clock.schedule_interval(self.animate_progress, 0.1) #kreisladebalken
      
-    def switch_to_filechooser(self):
+    def switch_to_mainview(self):
         self.screen_manager.transition.direction = 'left'
-        self.screen_manager.current = 'filechooser'
+        self.screen_manager.current = 'mainview'
         
 
-    def show_popup(self):
-        content = BoxLayout(orientation='vertical')
-        content.add_widget(Label(text='Popup Content'))
-        popup = Popup(title='Popup Title', content=content, size_hint=(None, None), size=(400, 400))
-        popup.open()
 
-    
 
+"""
+#öffnen nur ein neues fenster wo es den inhalt zwar anzeigt aber nur immer einen .. :(
+class FileContentView(BoxLayout):
+    def __init__(self, filechooser, file_path, **kwargs):
+        super().__init__(**kwargs)
+        self.orientation = 'vertical'
+        self.filechooser = filechooser
+
+        # Zurück-Button
+        back_button = Button(text='Zurück', size_hint_y=None, height=50)
+        back_button.bind(on_press=self.go_back)
+        self.add_widget(back_button)
+
+        # Dateiinhalt anzeigen
+        try:
+            with open(file_path, 'r') as file:
+                file_content = file.read()
+
+            content_label = Label(text=f"Inhalt der ausgewählten Datei:\n{file_content}")
+            self.add_widget(content_label)
+
+        except Exception as e:
+            print(f"Fehler beim Lesen der Datei: {e}")
+
+    def go_back(self, instance):
+        # Zurück zum Filechooser
+        self.filechooser.clear_widgets()
+        self.filechooser.add_widget(Filechooser())
+
+    def show_file_content(self, file_path):
+        try:
+            with open(file_path, 'r') as file:
+                file_content = file.read()
+
+            self.content_label.text = f"Inhalt der ausgewählten Datei:\n{file_content}"
+
+        except Exception as e:
+            print(f"Fehler beim Lesen der Datei: {e}")
+"""
+
+
+class MainView(BoxLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        self.label_1 = Label()
+        self.label_2 = Label()
+
+        self.ids.label_container_1.add_widget(self.label_1)
+        self.ids.label_container_2.add_widget(self.label_2)
+
+    def select(self, file_chooser, instance, value):
+        if value:
+            selected_file = value[0]
+            try:
+                with open(selected_file, 'r') as file:
+                    file_content = file.read()
+                    self.label_1.text = f"Inhalt der ausgewählten Datei 1:\n{file_content}"
+                    
+            except Exception as e:
+                print(f"Fehler beim Lesen der Datei: {e}")
+        
+        else:
+            print("Keine Datei ausgewählt.")
+
+"""
+###############
 class Filechooser(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.file_chooser = FileChooserListView()
+        self.filechooser_1 = None
+        self.filechooser_2 = None
+        self.content_label = Label()  # Assuming content_label is a Kivy Label
+        self.add_widget(self.content_label)  # Add content_label to the layout
 
+    def select(self, file_chooser, instance, value):
+        if value:
+            selected_file = value[0]
+
+            try:
+                with open(selected_file, 'r') as file:
+                    file_content = file.read()
+
+                self.content_label.text = f'Inhalt der ausgewählten Datei:\n{file_content}'
+
+            except Exception as e:
+                print(f"Fehler beim Lesen der Datei {selected_file}: {e}")
+        else:
+            print("Keine Datei ausgewählt.")
+
+
+#########################
+
+
+
+                if file_chooser == self.filechooser_1:
+                    current_label = self.ids.label_1
+                elif file_chooser == self.filechooser_2:
+                    current_label = self.ids.label_2
+                else:
+                    return
+
+                current_label.text = f'Inhalt der ausgewählten Datei:\n{file_content}'
+
+
+#######################
+                
+
+        #todo: soll dann nur gehen wenn zwei files ausgwählt worden sind
         self.select_files_button = Button(text='Select Files', size_hint_y=None, height=50)
         self.select_files_button.bind(on_press=self.show_progress_bar)
         self.add_widget(self.select_files_button)
 
         self.progress_bar = None
-
-    def show_progress_bar(self, instance):
         
+    def show_progress_bar(self, instance):
         self.remove_widget(self.select_files_button) #löscht den button und ersetzt ihn mit:
         #einem kreisladebalken->
         self.progress_bar = CircularProgressBar(welcome_view=None, max=100)
@@ -145,20 +243,39 @@ class Filechooser(BoxLayout):
             self.progress_bar.set_value(self.progress_bar.value + 1)
         else:
             #todo: nach dem "laden" -> ein popup fenser öffnen für die berechnungen
-            #self.parent.parent.show_popup()
+            self.show_popup()  # Popup anzeigen
+            Clock.unschedule(self.update_progress)  # Das Aktualisieren des Ladebalkens stoppen
             pass
             
 
-    def select(self, *args):
-        #ich kann es anklicken-> todo:nur das es auch den file öffnet
-        print("file ausgewählt")
-        # für die auswahl implementieren ...
+    #öffnen dann ein pupup fenster 
+    def show_popup(self):
+        content = BoxLayout(orientation='vertical')
+         # statt dem bild dann die berechnungen
+        image = Image(source='image/bild.png', size=(420, 200))
+        content.add_widget(image)
+
+        close_button = Button(text='Schließen', size_hint_y=None, height=50)
+        close_button.bind(on_press=self.dismiss_popup) #wenn ich auf den button clicke schließt er das pupup fenster
+        content.add_widget(close_button)
 
 
+        popup = Popup(title='Berechnungen', content=content, size_hint=(None, None), size=(700, 300))
+        popup.open()
+
+    def dismiss_popup(self, instance):
+        popup = self.children[0]
+        popup.dismiss()
+
+"""
+##--------------------------------------------------------
+    
 
 
-class Plagscan(App):
+class Plagiloki(MDApp): #hier den namen links oben ändern
     def build(self):
+        self.theme_cls.theme_style = 'Dark'  #theme style 
+
         screen_manager = ScreenManager()
 
         # wilkommen
@@ -168,14 +285,14 @@ class Plagscan(App):
         screen_manager.add_widget(welcome_screen)
 
         # filechooser
-        filechooser_screen = Screen(name='filechooser')
-        filechooser = Filechooser()
-        filechooser_screen.add_widget(filechooser)
-        screen_manager.add_widget(filechooser_screen)
-
+        mainview_screen = Screen(name='mainview')
+        mainview = MainView()
+        mainview_screen.add_widget(mainview)
+        screen_manager.add_widget(mainview_screen)
+        
         return screen_manager
 
 
 if __name__ == '__main__':
-    app = Plagscan()
+    app = Plagiloki()
     app.run()
