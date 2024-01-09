@@ -105,7 +105,7 @@ def plagiarism_checker(t1, t2):
     jac_sim = round(jac_sim * 100, 2)
 
     result = (cosine_sim + lev_sim + sm_wa_sim + jac_sim) / 4
-    result = round(result * 100, 2)
+    result = round(result, 2)
     return cosine_sim, lev_sim, sm_wa_sim, jac_sim, result
 
 def read_file(path):
