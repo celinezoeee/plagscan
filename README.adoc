@@ -51,5 +51,139 @@ https://blog.aspose.com/de/words/compare-pdf-files-in-python/
 
 
 
+== Random Braindump zum Code, Metriken etc.
+
+scikit-learn installieren hat nicht funktioniert
+
+https://medium.com/activewizards-machine-learning-company/comparison-of-the-text-distance-metrics-aed2eadfd1f1
+jaccard similarity, cosinus similarity --> casesensitive
+levenstein distanz
+smith waterman algorithmus
+
+verschiedene preprocessing stufen --> verschiedene similaritys berechen --> mittelwert
+    groß/klein schreibung
+    variablen weg
+
+länge von File Buchstaben zählen
+ausgabe: wert für jede metrik (und groß/klein?) und zusätzlich mittelwert
+
+
+=== JACCARD SIMILARITY
+
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+def calculate_jaccard_similarity(text1, text2):
+    tokens1 = set(word_tokenize(text1.lower()))
+    tokens2 = set(word_tokenize(text2.lower()))
+    intersection = len(tokens1.intersection(tokens2))
+    union = len(tokens1.union(tokens2))
+    jaccard_sim = intersection / union if union > 0 else 0
+    return jaccard_sim
+
+=== LEVENSHTEIN DISTANZ
+
+def levenshtein_distance(s1, s2):
+    if len(s1) < len(s2):
+        return levenshtein_distance(s2, s1)
+
+    if len(s2) == 0:
+        return len(s1)
+
+    previous_row = range(len(s2) + 1)
+
+    for i, c1 in enumerate(s1):
+        current_row = [i + 1]
+
+        for j, c2 in enumerate(s2):
+            insertions = previous_row[j + 1] + 1
+            deletions = current_row[j] + 1
+            substitutions = previous_row[j] + (c1 != c2)
+
+            current_row.append(min(insertions, deletions, substitutions))
+
+        previous_row = current_row
+
+    return previous_row[-1]
+
+def levenshtein_similarity(text1, text2):
+    max_length = max(len(text1), len(text2))
+    distance = levenshtein_distance(text1, text2)
+    similarity = 1 - (distance / max_length)
+    return similarity
+
+
+
+=== SMITH WATERMAN ALGORITHMUS
+
+def smith_waterman_similarity(text1, text2):
+    def max_substring_length(matrix):
+        return max(max(row) for row in matrix)
+
+    def backtrack(matrix, text1, text2, i, j):
+        alignment1, alignment2 = '', ''
+
+        while i > 0 and j > 0:
+            if matrix[i][j] == matrix[i - 1][j - 1] + 1:
+                alignment1 = text1[i - 1] + alignment1
+                alignment2 = text2[j - 1] + alignment2
+                i -= 1
+                j -= 1
+            elif matrix[i][j] == matrix[i - 1][j]:
+                i -= 1
+            else:
+                j -= 1
+
+        return alignment1, alignment2
+
+    matrix = [[0] * (len(text2) + 1) for _ in range(len(text1) + 1)]
+
+    for i in range(1, len(text1) + 1):
+        for j in range(1, len(text2) + 1):
+            if text1[i - 1] == text2[j - 1]:
+                matrix[i][j] = matrix[i - 1][j - 1] + 1
+            else:
+                matrix[i][j] = max(matrix[i - 1][j], matrix[i][j - 1], matrix[i - 1][j - 1])
+
+    max_len = max_substring_length(matrix)
+    similarity = max_len / max(len(text1), len(text2))
+
+    return similarity
+
+
+=== COSINE SIMILARITY
+import math
+
+def cosine_similarity(text1, text2):
+    def get_word_vector(text):
+        words = text.lower().split()
+        word_vector = {}
+        for word in words:
+            word_vector[word] = word_vector.get(word, 0) + 1
+        return word_vector
+
+    vector1 = get_word_vector(text1)
+    vector2 = get_word_vector(text2)
+
+    dot_product = sum(vector1[word] * vector2.get(word, 0) for word in vector1)
+    magnitude1 = math.sqrt(sum(vector1[word] ** 2 for word in vector1))
+    magnitude2 = math.sqrt(sum(vector2[word] ** 2 for word in vector2))
+
+    similarity = dot_product / (magnitude1 * magnitude2) if magnitude1 > 0 and magnitude2 > 0 else 0
+    return similarity
+
+
+=== JACCARD SIMILARITY
+def jaccard_similarity(text1, text2):
+    set1 = set(text1.lower().split())
+    set2 = set(text2.lower().split())
+
+    intersection = len(set1.intersection(set2))
+    union = len(set1.union(set2))
+
+    similarity = intersection / union if union > 0 else 0
+    return similarity
+
+
+
 
 
