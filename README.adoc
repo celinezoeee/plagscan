@@ -28,12 +28,15 @@ https://www.geeksforgeeks.org/kivy-tutorial/
 
 
 
++ schöneres DESIGN mit KivyMD = https://kivymd.readthedocs.io/en/1.1.1/
+    
 
 + dann die ähnlichkeit in % ausgeben
 
-+wenn ich einen file anklicke -> auch das ich es öffnen kann?
++ wenn ich einen file anklicke -> auch das ich es öffnen kann 
 
 +popup fenster -> https://kivy.org/doc/stable/api-kivy.uix.popup.html
+    --> wurde jetzt ein dialog fenster (ist schöner) = https://kivymd.readthedocs.io/en/latest/components/dialog/
 
 
 +der vergleicht nur DOC, DOCX und PDF. Mit der Bibliothek kann man Dokumente vergleichen und die Änderungen sogar auf Zeichenebene verfolgen.
