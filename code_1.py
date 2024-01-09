@@ -53,8 +53,8 @@ def smith_waterman_similarity(t1, t2):
 
         while i > 0 and j > 0:
             if matrix[i][j] == matrix[i - 1][j - 1] + 1:
-                alignment1 = text1[i - 1] + alignment1
-                alignment2 = text2[j - 1] + alignment2
+                alignment1 = t1[i - 1] + alignment1
+                alignment2 = t2[j - 1] + alignment2
                 i -= 1
                 j -= 1
             elif matrix[i][j] == matrix[i - 1][j]:
@@ -99,13 +99,14 @@ def plagiarism_checker(t1, t2):
     sm_wa_sim = smith_waterman_similarity(pp_t1, pp_t2)
     jac_sim = jaccard_similarity(pp_t1, pp_t2)
 
-    print(f"Cosine Similarity: {round(cosine_sim * 100, 2)}%")
-    print(f"Levenshtein Distance: {round(lev_sim * 100, 2)}%")
-    print(f"Smith-Waterman-Similarity: {round(sm_wa_sim * 100, 2)}%")
-    print(f"Jaccard Similarity: {round(jac_sim * 100, 2)}%")
+    cosine_sim = round(cosine_sim * 100, 2)
+    lev_sim = round(lev_sim * 100, 2)
+    sm_wa_sim = round(sm_wa_sim * 100, 2)
+    jac_sim = round(jac_sim * 100, 2)
 
     result = (cosine_sim + lev_sim + sm_wa_sim + jac_sim) / 4
-    return round(result * 100, 2)
+    result = round(result * 100, 2)
+    return cosine_sim, lev_sim, sm_wa_sim, jac_sim, result
 
 def read_file(path):
     with open(path, 'r', encoding='utf-8') as file:
@@ -122,6 +123,7 @@ def read_file(path):
 
 # result = plagiarism_checker(text1, text2)
 # print(f"Ähnlichkeit: {result}%")
+#kommentar
 
 
 
