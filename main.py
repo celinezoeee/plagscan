@@ -19,6 +19,8 @@ from kivymd.uix.progressbar import MDProgressBar
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
 
+from code_1 import plagiarism_checker
+
 Builder.load_file('kivyy.kv')
 
 #bild links oben
@@ -121,6 +123,8 @@ MDFloatLayout:
         on_release: app.show_alert_dialog()
 '''
 
+
+
 class MainView(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -130,37 +134,51 @@ class MainView(BoxLayout):
             selected_file = value[0]
             try:
                 with open(selected_file, 'r') as file:
-                    file_content = file.read()
-                    self.ids.label_1.text = f"Inhalt der ausgewählten Datei 1:\n{file_content}"
+                    file_content_1 = file.read()
+                    self.ids.label_1.text = f"Inhalt der ausgewählten Datei 1:\n{file_content_1}"
                     
             except Exception as e:
                 print(f"Fehler beim Lesen der Datei: {e}")
         
         else:
             print("Keine Datei ausgewählt.")
+        return file_content_1
 
     def select_2(self, instance, value):
         if value:
             selected_file = value[0]
             try:
                 with open(selected_file, 'r') as file:
-                    file_content = file.read()
-                    self.ids.label_2.text = f"Inhalt der ausgewählten Datei 2:\n{file_content}"
+                    file_content_2 = file.read()
+                    self.ids.label_2.text = f"Inhalt der ausgewählten Datei 2:\n{file_content_2}"
                     
             except Exception as e:
                 print(f"Fehler beim Lesen der Datei: {e}")
         
         else:
             print("Keine Datei ausgewählt.")
+        return file_content_2
     
+
+
+    def berechnungen(self, file_content_1, file_content_2):
+        result = plagiarism_checker(file_content_1, file_content_2)
+        return f"Plagiarism result: {result}" 
+
+
     def press_compare(self):
         if self.ids.label_1.text and self.ids.label_2.text:
+            file_content_1 = self.ids.label_1.text
+            file_content_2 = self.ids.label_2.text
+
+            result_message = self.berechnungen(file_content_1, file_content_2)
+
             dialog = MDDialog(
-                text="Berechnungen",
+                text=result_message,
                 buttons=[
                     MDFlatButton(
                         text="OK",
-                        on_release=lambda *args: dialog.dismiss() #schließt das fenster und man kann wieder einen file auswählen
+                        on_release=lambda *args: dialog.dismiss()
                     )
                 ]
             )
