@@ -10,7 +10,7 @@ from kivy.uix.widget import Widget
 from kivy.lang import Builder
 from kivy.uix.progressbar import ProgressBar
 from kivy.clock import Clock
-from kivy.core.text import Label as CoreLabel
+from kivy.core.text import Label as CoreLabel #kreisladebalken ? 
 from kivy.graphics import Color, Ellipse, Rectangle
 from kivy.uix.filechooser import FileChooserListView
 from kivy.uix.popup import Popup
@@ -111,7 +111,7 @@ class WelcomeView(GridLayout):
         self.screen_manager.current = 'mainview'
 
 
-#für den dialog fenster        
+#für das dialog fenster        
 KV = '''
 MDFloatLayout:
 
@@ -160,7 +160,7 @@ class MainView(BoxLayout):
                 buttons=[
                     MDFlatButton(
                         text="OK",
-                        on_release=lambda *args: dialog.dismiss()
+                        on_release=lambda *args: dialog.dismiss() #schließt das fenster und man kann wieder einen file auswählen
                     )
                 ]
             )

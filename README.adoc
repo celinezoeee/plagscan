@@ -50,6 +50,8 @@ https://blog.aspose.com/de/words/compare-pdf-files-in-python/
     - https://scikit-learn.org/stable/ 
 
 
+-- zum updaten requirements.txt ->      pip freeze > requirements.txt
+
 
 == Random Braindump zum Code, Metriken etc.
 
