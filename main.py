@@ -10,7 +10,6 @@ from kivy.uix.widget import Widget
 from kivy.lang import Builder
 from kivy.uix.progressbar import ProgressBar
 from kivy.clock import Clock
-#from kivy.core.text import Label as CoreLabel #kreisladebalken ? 
 from kivy.graphics import Color, Ellipse, Rectangle
 from kivy.uix.filechooser import FileChooserListView
 from kivy.uix.popup import Popup
@@ -43,48 +42,7 @@ class MyProgressBar(MDProgressBar):
     def switch_to_mainview(self):
         self.welcome_view.switch_to_mainview()
 
-"""
-#### -> um später einen kreis als ladebalken zu haben ? 
-class CircularProgressBar(ProgressBar):
-    def __init__(self, welcome_view, **kwargs):
-        super().__init__(**kwargs)
-        self.size_hint = (None, None)  # keine automatische größenanpassung
-        self.size = (100, 100)  # größe des kreises
-        self.pos_hint = {'center_x': 0.5, 'center_y': 0.5}  # derweil in der mitte positionieren 
-        self.welcome_view = welcome_view
-        self.thickness = 20  # kleiner ring? 
-        self.label = CoreLabel(text="0%", font_size=self.thickness)
-        self.texture_size = None
-        self.refresh_text()
-        self.draw()
 
-    def draw(self):
-        with self.canvas:
-            self.canvas.clear()
-            Color(0, 0, 0)  #schwarz
-            Ellipse(pos=self.pos, size=self.size)
-            Color(0.5, 0, 0.5) #violett
-            Ellipse(pos=self.pos, size=self.size, angle_end=(0.001 if self.value_normalized == 0 else self.value_normalized*360))
-            Color(0, 0, 0)
-            Ellipse(pos=(self.pos[0] + self.thickness / 2, self.pos[1] + self.thickness / 2),
-                    size=(self.size[0] - self.thickness, self.size[1] - self.thickness))
-            Color(1, 1, 1, 1)
-            Rectangle(texture=self.label.texture, size=self.texture_size,
-                      pos=(self.size[0] / 2 - self.texture_size[0] / 2 + self.pos[0], self.size[1] / 2 - self.texture_size[1] / 2 + self.pos[1]))
-
-    def refresh_text(self):
-        self.label.refresh()
-        self.texture_size = list(self.label.texture.size)
-
-    #im kreis die %
-    def set_value(self, value):
-        self.value = value
-        self.label.text = str(int(self.value_normalized*100)) + "%"
-        self.refresh_text()
-        self.draw()
-
-######
-"""
 
 class WelcomeView(GridLayout):
     def __init__(self, screen_manager, **kwargs):
@@ -112,18 +70,6 @@ class WelcomeView(GridLayout):
         self.screen_manager.transition.direction = 'left'
         self.screen_manager.current = 'mainview'
 
-"""
-#für das dialog fenster        
-KV = '''
-MDFloatLayout:
-
-    MDFlatButton:
-        text: "ALERT DIALOG"
-        pos_hint: {'center_x': .5, 'center_y': .5}
-        on_release: app.show_alert_dialog()
-        
-'''
-"""
 
 class MainView(BoxLayout):
     def __init__(self, **kwargs):
@@ -177,10 +123,10 @@ class MainView(BoxLayout):
 
             result = (
                 f"[size=25][u]Calculations:[/u][/size]\n"
-                f"Cosine Similarity: {cosine_sim:.2f}\n"
-                f"Levenshtein Similarity: {lev_sim:.2f}\n"
-                f"Smith-Waterman Similarity: {sm_wa_sim:.2f}\n"
-                f"Jaccard Similarity: {jac_sim:.2f}\n\n"
+                f"Cosine Similarity: {cosine_sim:.2f}%\n"
+                f"Levenshtein Similarity: {lev_sim:.2f}%\n"
+                f"Smith-Waterman Similarity: {sm_wa_sim:.2f}%\n"
+                f"Jaccard Similarity: {jac_sim:.2f}%\n\n"
                 f"Overall Result: {result:.2f}%"
             )
 
