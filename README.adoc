@@ -52,6 +52,13 @@ https://blog.aspose.com/de/words/compare-pdf-files-in-python/
 
 -- zum updaten requirements.txt ->      pip freeze > requirements.txt
 
+== Was noch zu tun ist (Stand 09.01.2023):
+    - Preprocessing Funktion machen
+    - evtl kleines Logo im Eck oben fixen
+    - evtl Bar in Lila einfärben
+    - testen
+    - fehlersuchen und fixen
+
 
 == Random Braindump zum Code, Metriken etc.
 
