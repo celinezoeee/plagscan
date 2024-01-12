@@ -55,7 +55,7 @@ class WelcomeView(GridLayout):
         self.pos_hint = {'center_x': 0.5, 'center_y': 0.5}
         ###
 
-        self.add_widget(Image(source='image/logo_loki.png', size=(50, 50)))  # hier das bild dann einfugen
+        self.add_widget(Image(source='image/logo_loki_klein.png', size=(50, 50)))  # hier das bild dann einfugen
 
         self.greeting = Label(text='Welcome!', font_size=18, color=(1, 0, 1, 1))
         self.add_widget(self.greeting)
@@ -158,7 +158,7 @@ class MainView(BoxLayout):
 class Plagiloki(MDApp): #hier den namen links oben ändern
     def build(self):
         self.theme_cls.theme_style = 'Dark'  #theme style
-        self.icon = "image/logo_loki_free.png" #icon (links oben) hier ändern
+        self.icon = "image/logo_loki_free_klein.png" #icon (links oben) hier ändern
 
         screen_manager = ScreenManager()
 
