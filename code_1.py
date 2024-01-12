@@ -115,17 +115,5 @@ def read_file(path):
     return text
 
 
-# path1 = 'C:\Python\Plagiatscanner\plagscan\matlabtest1.m'
-# path2 = 'C:\Python\Plagiatscanner\plagscan\matlabtest2.m'
-
-# text1 = read_file(path1)
-# text2 = read_file(path2)
-
-# result = plagiarism_checker(text1, text2)
-# print(f"Ähnlichkeit: {result}%")
-#kommentar
-
-
-
 
 

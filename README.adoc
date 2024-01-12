@@ -29,9 +29,10 @@ https://www.geeksforgeeks.org/kivy-tutorial/
 
 
 + schöneres DESIGN mit KivyMD = https://kivymd.readthedocs.io/en/1.1.1/
+    -ladebalken, ..
     
 
-+ dann die ähnlichkeit in % ausgeben
++ dann die ähnlichkeit in % ausgeben (berechnungen)
 
 + wenn ich einen file anklicke -> auch das ich es öffnen kann 
 

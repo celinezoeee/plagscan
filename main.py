@@ -10,7 +10,6 @@ from kivy.uix.widget import Widget
 from kivy.lang import Builder
 from kivy.uix.progressbar import ProgressBar
 from kivy.clock import Clock
-from kivy.core.text import Label as CoreLabel #kreisladebalken ? 
 from kivy.graphics import Color, Ellipse, Rectangle
 from kivy.uix.filechooser import FileChooserListView
 from kivy.uix.popup import Popup
@@ -18,21 +17,21 @@ from kivy.graphics import Line
 from kivymd.uix.progressbar import MDProgressBar
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
+from kivymd.uix.boxlayout import MDBoxLayout
+from kivy.core.window import Window
+
 
 from code_1 import plagiarism_checker
 
 Builder.load_file('kivyy.kv')
 
-#bild links oben
-Config.set('kivy', 'window_icon', 'image/bild.png')
-
-
-# ladebalken -> todo: andere farbe?
+# ladebalken
 class MyProgressBar(MDProgressBar):
     def __init__(self, welcome_view, **kwargs):
         super().__init__(**kwargs)
         self.welcome_view = welcome_view
-        self.color = (0.5, 0, 0.5) # hier die farbe ändern
+        self.color = (1, 0, 1, 1) # hier die farbe ändern
+        self.size = (50, 50)
 
     def update_progress(self, dt):
         self.value += 1 #wie schnell soll es laden?
@@ -43,47 +42,6 @@ class MyProgressBar(MDProgressBar):
     def switch_to_mainview(self):
         self.welcome_view.switch_to_mainview()
 
-
-#### -> um später einen kreis als ladebalken zu haben ? 
-class CircularProgressBar(ProgressBar):
-    def __init__(self, welcome_view, **kwargs):
-        super().__init__(**kwargs)
-        self.size_hint = (None, None)  # keine automatische größenanpassung
-        self.size = (100, 100)  # größe des kreises
-        self.pos_hint = {'center_x': 0.5, 'center_y': 0.5}  # derweil in der mitte positionieren 
-        self.welcome_view = welcome_view
-        self.thickness = 20  # kleiner ring? 
-        self.label = CoreLabel(text="0%", font_size=self.thickness)
-        self.texture_size = None
-        self.refresh_text()
-        self.draw()
-
-    def draw(self):
-        with self.canvas:
-            self.canvas.clear()
-            Color(0, 0, 0)  #schwarz
-            Ellipse(pos=self.pos, size=self.size)
-            Color(0.5, 0, 0.5) #violett
-            Ellipse(pos=self.pos, size=self.size, angle_end=(0.001 if self.value_normalized == 0 else self.value_normalized*360))
-            Color(0, 0, 0)
-            Ellipse(pos=(self.pos[0] + self.thickness / 2, self.pos[1] + self.thickness / 2),
-                    size=(self.size[0] - self.thickness, self.size[1] - self.thickness))
-            Color(1, 1, 1, 1)
-            Rectangle(texture=self.label.texture, size=self.texture_size,
-                      pos=(self.size[0] / 2 - self.texture_size[0] / 2 + self.pos[0], self.size[1] / 2 - self.texture_size[1] / 2 + self.pos[1]))
-
-    def refresh_text(self):
-        self.label.refresh()
-        self.texture_size = list(self.label.texture.size)
-
-    #im kreis die %
-    def set_value(self, value):
-        self.value = value
-        self.label.text = str(int(self.value_normalized*100)) + "%"
-        self.refresh_text()
-        self.draw()
-
-######
 
 
 class WelcomeView(GridLayout):
@@ -97,9 +55,9 @@ class WelcomeView(GridLayout):
         self.pos_hint = {'center_x': 0.5, 'center_y': 0.5}
         ###
 
-        self.add_widget(Image(source='image/bild.png', size=(50, 50)))  # hier das bild dann einfugen
+        self.add_widget(Image(source='image/logo_loki.png', size=(50, 50)))  # hier das bild dann einfugen
 
-        self.greeting = Label(text='Welcome!', font_size=18, color='#9010ad')
+        self.greeting = Label(text='Welcome!', font_size=18, color=(1, 0, 1, 1))
         self.add_widget(self.greeting)
 
         # ladebalken einfügen
@@ -113,18 +71,6 @@ class WelcomeView(GridLayout):
         self.screen_manager.current = 'mainview'
 
 
-#für das dialog fenster        
-KV = '''
-MDFloatLayout:
-
-    MDFlatButton:
-        text: "ALERT DIALOG"
-        pos_hint: {'center_x': .5, 'center_y': .5}
-        on_release: app.show_alert_dialog()
-'''
-
-
-
 class MainView(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -135,13 +81,13 @@ class MainView(BoxLayout):
             try:
                 with open(selected_file, 'r') as file:
                     file_content_1 = file.read()
-                    self.ids.label_1.text = f"Inhalt der ausgewählten Datei 1:\n{file_content_1}"
+                    self.ids.label_1.text = f"{file_content_1}"
                     
             except Exception as e:
-                print(f"Fehler beim Lesen der Datei: {e}")
+                print(f"Error reading the file: {e}")
         
         else:
-            print("Keine Datei ausgewählt.")
+            print("Error!")
         return file_content_1
 
     def select_2(self, instance, value):
@@ -150,46 +96,69 @@ class MainView(BoxLayout):
             try:
                 with open(selected_file, 'r') as file:
                     file_content_2 = file.read()
-                    self.ids.label_2.text = f"Inhalt der ausgewählten Datei 2:\n{file_content_2}"
+                    self.ids.label_2.text = f"{file_content_2}"
                     
             except Exception as e:
-                print(f"Fehler beim Lesen der Datei: {e}")
+                print(f"Error reading the file: {e}")
         
         else:
-            print("Keine Datei ausgewählt.")
+            print("Error!")
         return file_content_2
     
 
 
-    def berechnungen(self, file_content_1, file_content_2):
-        result = plagiarism_checker(file_content_1, file_content_2)
-        return f"Plagiarism result: {result}" 
-
+    def calcultations(self, file_content_1, file_content_2):
+        cosine_sim, lev_sim, sm_wa_sim, jac_sim, result = plagiarism_checker(file_content_1, file_content_2)
+        return cosine_sim, lev_sim, sm_wa_sim, jac_sim, result
 
     def press_compare(self):
-        if self.ids.label_1.text and self.ids.label_2.text:
-            file_content_1 = self.ids.label_1.text
-            file_content_2 = self.ids.label_2.text
+        default_text_1 = 'Select a file to start the scan...'
+        default_text_2 = 'Select a file to start the scan...'
 
-            result_message = self.berechnungen(file_content_1, file_content_2)
+        file_content_1 = self.ids.label_1.text
+        file_content_2 = self.ids.label_2.text
+
+        if file_content_1 != default_text_1 and file_content_2 != default_text_2: #überprüft ob der default text noch darsteht dann führt er die berechnungen so lange nicht aus...
+            cosine_sim, lev_sim, sm_wa_sim, jac_sim, result = self.calcultations(file_content_1, file_content_2)
+
+            result = (
+                f"[size=25][u]Calculations:[/u][/size]\n"
+                f"Cosine Similarity: {cosine_sim:.2f}%\n"
+                f"Levenshtein Similarity: {lev_sim:.2f}%\n"
+                f"Smith-Waterman Similarity: {sm_wa_sim:.2f}%\n"
+                f"Jaccard Similarity: {jac_sim:.2f}%\n\n"
+                f"Overall Result: {result:.2f}%"
+            )
 
             dialog = MDDialog(
-                text=result_message,
+                text=result, #gibt die berechnungen der zwei files aus
                 buttons=[
                     MDFlatButton(
-                        text="OK",
+                        text="Back",
                         on_release=lambda *args: dialog.dismiss()
                     )
                 ]
             )
             dialog.open()
-
+        else:
+        # Meldung anzeigen, wenn nicht beide Dateien ausgewählt sind
+            error_dialog = MDDialog(
+                text="Please select two files!",
+                buttons=[
+                    MDFlatButton(
+                        text="OK",
+                        on_release=lambda *args: error_dialog.dismiss()
+                    )
+                ]
+            )
+            error_dialog.open()
 
 
 
 class Plagiloki(MDApp): #hier den namen links oben ändern
     def build(self):
-        self.theme_cls.theme_style = 'Dark'  #theme style 
+        self.theme_cls.theme_style = 'Dark'  #theme style
+        self.icon = "image/logo_loki_free.png" #icon (links oben) hier ändern
 
         screen_manager = ScreenManager()
 
