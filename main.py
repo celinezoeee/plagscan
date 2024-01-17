@@ -76,33 +76,57 @@ class MainView(BoxLayout):
         super().__init__(**kwargs)
 
     def select_1(self, instance, value):
-        if value:
-            selected_file = value[0]
-            try:
-                with open(selected_file, 'r') as file:
-                    file_content_1 = file.read()
-                    self.ids.label_1.text = f"{file_content_1}"
+        file_content_1 = None  
+        try:
+            if value:
+                selected_file = value[0]
+                try:
+                    with open(selected_file, 'r') as file:
+                        file_content_1 = file.read()
+                        self.ids.label_1.text = f"{file_content_1}"
                     
-            except Exception as e:
-                print(f"Error reading the file: {e}")
-        
-        else:
+                except Exception as e:
+                    #wenn eine falsche Datei ausgewählt worden ist
+                    error_dialog = MDDialog(
+                        text="Please select a valid file!",
+                        buttons=[
+                            MDFlatButton(
+                                text="Back",
+                                on_release=lambda *args: error_dialog.dismiss()
+                            )
+                        ]
+                    )
+                    error_dialog.open()
+        except Exception as e:
             print("Error!")
+        
         return file_content_1
 
     def select_2(self, instance, value):
-        if value:
-            selected_file = value[0]
-            try:
-                with open(selected_file, 'r') as file:
-                    file_content_2 = file.read()
-                    self.ids.label_2.text = f"{file_content_2}"
+        file_content_2 = None 
+        try:
+            if value:
+                selected_file = value[0]
+                try:
+                    with open(selected_file, 'r') as file:
+                        file_content_2 = file.read()
+                        self.ids.label_2.text = f"{file_content_2}"
                     
-            except Exception as e:
-                print(f"Error reading the file: {e}")
-        
-        else:
-            print("Error!")
+                except Exception as e:
+                    #wenn eine falsche Datei ausgewählt worden ist
+                    error_dialog = MDDialog(
+                        text="Please select a valid file!",
+                        buttons=[
+                            MDFlatButton(
+                                text="Back",
+                                on_release=lambda *args: error_dialog.dismiss()
+                            )
+                        ]
+                    )
+                    error_dialog.open()
+        except Exception as e:
+            print(f"Error!")
+
         return file_content_2
     
 
@@ -112,8 +136,9 @@ class MainView(BoxLayout):
         return cosine_sim, lev_sim, sm_wa_sim, jac_sim, result
 
     def press_compare(self):
-        default_text_1 = 'Select a file to start the scan...'
-        default_text_2 = 'Select a file to start the scan...'
+        
+        default_text_1 = 'Select a file to start the scan... (.m, .txt)'
+        default_text_2 = 'Select a file to start the scan... (.m, .txt)'
 
         file_content_1 = self.ids.label_1.text
         file_content_2 = self.ids.label_2.text
@@ -141,12 +166,12 @@ class MainView(BoxLayout):
             )
             dialog.open()
         else:
-        # Meldung anzeigen, wenn nicht beide Dateien ausgewählt sind
+        #meldung anzeigen, wenn nicht beide Dateien ausgewählt sind
             error_dialog = MDDialog(
                 text="Please select two files!",
                 buttons=[
                     MDFlatButton(
-                        text="OK",
+                        text="Back",
                         on_release=lambda *args: error_dialog.dismiss()
                     )
                 ]
