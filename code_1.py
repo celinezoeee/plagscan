@@ -1,8 +1,16 @@
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+import re
 
 
 def preprocess_text(text):
+    # cuts spaces which are more than 1
+    text = re.sub(r'\s{2,}', ' ', text)
+    # cuts paragraphs which are more than 1
+    text = re.sub(r'\n\s*\n', '\n', text)
+    # cuts Matlab comments
+    text = re.sub(r'%.*', '', text)  # line
+    text = re.sub(r'(?s)%\{.*?%\}', '', text)  # block
     return text
 
 
