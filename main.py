@@ -20,73 +20,76 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivy.core.window import Window
 
-
+#include the calculations
 from code_1 import plagiarism_checker
 
-Builder.load_file('kivyy.kv')
+Builder.load_file('kivyy.kv') # den .kv file includen
 
-# ladebalken
+# loading bar for the first window
 class MyProgressBar(MDProgressBar):
     def __init__(self, welcome_view, **kwargs):
         super().__init__(**kwargs)
         self.welcome_view = welcome_view
-        self.color = (1, 0, 1, 1) # hier die farbe ändern
+        self.color = (1, 0, 1, 1) # change the color (loading bar)
         self.size = (50, 50)
 
     def update_progress(self, dt):
-        self.value += 1 #wie schnell soll es laden?
+        self.value += 1 # how fast should it load?
 
         if self.value >= 100:
-            self.switch_to_mainview()
+            self.switch_to_mainview() #then switch to the next window
 
     def switch_to_mainview(self):
         self.welcome_view.switch_to_mainview()
 
 
 
-class WelcomeView(GridLayout):
+class WelcomeView(GridLayout): # first window
     def __init__(self, screen_manager, **kwargs):
         super().__init__(**kwargs)
         self.screen_manager = screen_manager
         
-        # ausrichtung vom welcome screen -> mittig
+        # alignment of the welcome screen -> in the center
         self.cols = 1
         self.size_hint = (0.6, 0.7)
         self.pos_hint = {'center_x': 0.5, 'center_y': 0.5}
         ###
 
-        self.add_widget(Image(source='image/logo_loki_klein.png', size=(50, 50)))  # hier das bild dann einfugen
+        self.add_widget(Image(source='image/logo_loki_klein.png', size=(50, 50)))  # insert a image
 
         self.greeting = Label(text='Welcome!', font_size=18, color=(1, 0, 1, 1))
         self.add_widget(self.greeting)
 
-        # ladebalken einfügen
+        # insert loading bar
         self.progress_bar = MyProgressBar(welcome_view=self, max=100)
         self.add_widget(self.progress_bar)
-        # laden
+        # load
         Clock.schedule_interval(self.progress_bar.update_progress, 1 / 25)
      
+    #then switch to second window 
     def switch_to_mainview(self):
         self.screen_manager.transition.direction = 'left'
         self.screen_manager.current = 'mainview'
 
 
-class MainView(BoxLayout):
+class MainView(BoxLayout): # second window
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
+    #select first file 
     def select_1(self, instance, value):
         file_content_1 = None  
         try:
             if value:
                 selected_file = value[0]
                 try:
+                    # display the content of the selected file
                     with open(selected_file, 'r') as file:
                         file_content_1 = file.read()
                         self.ids.label_1.text = f"{file_content_1}"
                     
                 except Exception as e:
-                    #wenn eine falsche Datei ausgewählt worden ist
+                    # if an incorrect file has been selected
                     error_dialog = MDDialog(
                         text="Please select a valid file!",
                         buttons=[
@@ -108,12 +111,13 @@ class MainView(BoxLayout):
             if value:
                 selected_file = value[0]
                 try:
+                    # display the content of the selected file
                     with open(selected_file, 'r') as file:
                         file_content_2 = file.read()
                         self.ids.label_2.text = f"{file_content_2}"
                     
                 except Exception as e:
-                    #wenn eine falsche Datei ausgewählt worden ist
+                    # if an incorrect file has been selected
                     error_dialog = MDDialog(
                         text="Please select a valid file!",
                         buttons=[
@@ -130,11 +134,12 @@ class MainView(BoxLayout):
         return file_content_2
     
 
-
+    # the results of the calculations
     def calcultations(self, file_content_1, file_content_2):
         cosine_sim, lev_sim, sm_wa_sim, jac_sim, result = plagiarism_checker(file_content_1, file_content_2)
         return cosine_sim, lev_sim, sm_wa_sim, jac_sim, result
 
+    # when clicking the button, it checks and then it shows the calculations
     def press_compare(self):
         
         default_text_1 = 'Select a file to start the scan... (.m, .txt)'
@@ -143,9 +148,10 @@ class MainView(BoxLayout):
         file_content_1 = self.ids.label_1.text
         file_content_2 = self.ids.label_2.text
 
-        if file_content_1 != default_text_1 and file_content_2 != default_text_2: #überprüft ob der default text noch darsteht dann führt er die berechnungen so lange nicht aus...
+        if file_content_1 != default_text_1 and file_content_2 != default_text_2: # checks if the default text is still present
             cosine_sim, lev_sim, sm_wa_sim, jac_sim, result = self.calcultations(file_content_1, file_content_2)
-
+            
+            #shows the calculations
             result = (
                 f"[size=25][u]Calculations:[/u][/size]\n"
                 f"Cosine Similarity: {cosine_sim:.2f}%\n"
@@ -156,17 +162,17 @@ class MainView(BoxLayout):
             )
 
             dialog = MDDialog(
-                text=result, #gibt die berechnungen der zwei files aus
+                text=result, # displays the calculations from the two selected files
                 buttons=[
                     MDFlatButton(
                         text="Back",
-                        on_release=lambda *args: dialog.dismiss()
+                        on_release=lambda *args: dialog.dismiss() # back to main view
                     )
                 ]
             )
             dialog.open()
         else:
-        #meldung anzeigen, wenn nicht beide Dateien ausgewählt sind
+        # display a message if not both files are selected
             error_dialog = MDDialog(
                 text="Please select two files!",
                 buttons=[
@@ -179,15 +185,14 @@ class MainView(BoxLayout):
             error_dialog.open()
 
 
-
-class Plagiloki(MDApp): #hier den namen links oben ändern
+class Plagiloki(MDApp): # change the name at the top left 
     def build(self):
-        self.theme_cls.theme_style = 'Dark'  #theme style
-        self.icon = "image/logo_loki_free_klein.png" #icon (links oben) hier ändern
+        self.theme_cls.theme_style = "Dark"  #theme style
+        self.icon = "image/logo_loki_free_klein.png" #icon image 
 
         screen_manager = ScreenManager()
 
-        # wilkommen
+        # welcome
         welcome_screen = Screen(name='welcomeView')
         welcome_view = WelcomeView(screen_manager)
         welcome_screen.add_widget(welcome_view)
